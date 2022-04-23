@@ -1,0 +1,1 @@
+/usr/bin/find /var/www/example.com/wp-content/targetdir -name "*.txt" -type f -mtime +7 -delete

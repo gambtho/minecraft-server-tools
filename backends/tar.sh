@@ -1,5 +1,6 @@
 function tar_init() {
     # nothing to do for tar?
+    log_debug "tar: no tar init..."
 }
 
 function tar_remove_old() {
@@ -33,7 +34,7 @@ function tar_create_backup() {
 
     # save world to a temporary archive
     local archname="/tmp/${BACKUP_NAME}_`date +%F_%H-%M-%S`.tar.gz"
-    tar -czf "$archname" "./$WORLD_NAME"
+    tar -czf "$archname" "./$WORLD_NAME" "./${WORLD_NAME}_nether" "./${WORLD_NAME}_the_end" "./minecraft-server-tools" "server.properties"
 	status=$?
     if [ $status -ne 0 ]; then
         log_error "tar: failed to save the world"
