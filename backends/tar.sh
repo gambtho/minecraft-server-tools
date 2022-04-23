@@ -1,6 +1,28 @@
 function tar_init() {
     # nothing to do for tar?
-    :
+}
+
+function tar_remove_old() {
+    log_debug "tar: removing older backups..."
+
+	local status
+
+    local retcode=1
+    for backup_dir in ${PURGEABLE_DIRS[*]}
+    do
+        log_info "tar: cleaning up \"$backup_dir\""
+        find $backup_dir -name "*.tar.gz" -type f -mtime +7 -delete
+		status=$?
+        if [ $status -ne 0 ]; then
+            log_error "tar: failed cleaning \"$backup_dir\", moving on"
+        else
+            retcode=0
+        fi
+     done
+
+    log_debug "tar: backup purge finished"
+
+    return $retcode
 }
 
 # TODO: Make default .tar with optional bup

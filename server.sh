@@ -237,6 +237,8 @@ function server_backup_safe() {
 		log_info "Running backup hook"
 		$BACKUP_HOOK
 	fi
+
+	server_purge_backups
 }
 
 function server_backup_unsafe() {
@@ -281,11 +283,15 @@ function server_backup() {
 	fi
 }
 
-function server_ls_backups() {
-	for backup_dir in ${BACKUP_DIRS[*]}
+function server_purge_backups() {
+	for backup_dir in ${PURGEABLE_DIRS[*]}
 	do
-		log_info "backups in ${backup_dir}:"
-		backup_backend_run "ls \"$backup_dir\""
+		if [ $BACKUP_BACKEND = "tar" ]; then
+			log_info "purging old backups in ${backup_dir}"
+			backup_backend_run "remove_old"
+		else
+			log_info "skipping purge, as only supported for tar"
+		fi
 	done
 }
 
